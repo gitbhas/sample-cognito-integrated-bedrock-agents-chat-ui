@@ -15,7 +15,9 @@ import {
   Button,
   Modal,
   SpaceBetween,
-  TopNavigation
+  TopNavigation,
+  FileUpload
+  
 } from "@cloudscape-design/components";
 import PropTypes from 'prop-types';
 import * as AWSAuth from '@aws-amplify/auth';
@@ -31,6 +33,8 @@ import './ChatComponent.css';
  * @param {Function} props.onConfigEditorClick - Callback for configuration editor
  * @returns {JSX.Element} The chat interface
  */
+
+const [selectedFile, setSelectedFile] = useState(null);
 const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
   // AWS Bedrock client instance for agent communication
   const [bedrockClient, setBedrockClient] = useState(null);
@@ -238,6 +242,8 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
       
       // Clear input field
       setNewMessage('');
+      setSelectedFile(null);
+
       // Create message object with user information
       const userMessage = { text: newMessage, sender: user.attributes?.preferred_username || user.username };
 
@@ -503,43 +509,51 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
             )}
           </div>
           <form onSubmit={handleSubmit} className="message-form">
-            <Form
-            >
-              <FormField stretch>
-                <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <button
-                    type="button"
-                    onClick={isListening ? stopListening : startListening}
-                    title={isListening ? "Stop Listening" : "Start Listening"}
-                    className="mic-button"
-                    hidden={!speechRecognitionSupported}
-                  >
-                    {isListening ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" height="28" width="28" fill="red" viewBox="0 0 24 24">
-                        <path d="M12 14q-1.25 0-2.125-.875T9 11V5q0-1.25.875-2.125T12 2q1.25 0 2.125.875T15 5v6q0 1.25-.875 2.125T12 14Zm-1 7v-3.1q-2.875-.35-4.437-2.35Q5 13.55 5 11h2q0 2.075 1.463 3.538Q9.925 16 12 16q2.075 0 3.538-1.462Q17 13.075 17 11h2q0 2.55-1.563 4.55-1.562 2-4.437 2.35V21Z" />
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" height="28" width="28" fill="black" viewBox="0 0 24 24">
-                        <path d="M12 14q-1.25 0-2.125-.875T9 11V5q0-1.25.875-2.125T12 2q1.25 0 2.125.875T15 5v6q0 1.25-.875 2.125T12 14Zm-1 7v-3.1q-2.875-.35-4.437-2.35Q5 13.55 5 11h2q0 2.075 1.463 3.538Q9.925 16 12 16q2.075 0 3.538-1.462Q17 13.075 17 11h2q0 2.55-1.563 4.55-1.562 2-4.437 2.35V21Z" />
-                      </svg>
-                    )}
-                  </button>
-                  <div style={{ flex: 1 }}>
-                    <PromptInput
-                      type='text'
-                      value={newMessage}
-                      onChange={({ detail }) => setNewMessage(detail.value)}
-                      placeholder='Type your question here...'
-                      actionButtonAriaLabel="Send message"
-                      actionButtonIconName="send"
-                    />
-                  </div>
-                </div>
+  <Form>
+    <FormField stretch>
+      <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        <button
+          type="button"
+          onClick={isListening ? stopListening : startListening}
+          title={isListening ? "Stop Listening" : "Start Listening"}
+          className="mic-button"
+          hidden={!speechRecognitionSupported}
+        >
+          {isListening ? (
+            <svg xmlns="http://www.w3.org/2000/svg" height="28" width="28" fill="red" viewBox="0 0 24 24">
+              <path d="M12 14q-1.25 0-2.125-.875T9 11V5q0-1.25.875-2.125T12 2q1.25 0 2.125.875T15 5v6q0 1.25-.875 2.125T12 14Zm-1 7v-3.1q-2.875-.35-4.437-2.35Q5 13.55 5 11h2q0 2.075 1.463 3.538Q9.925 16 12 16q2.075 0 3.538-1.462Q17 13.075 17 11h2q0 2.55-1.563 4.55-1.562 2-4.437 2.35V21Z" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" height="28" width="28" fill="black" viewBox="0 0 24 24">
+              <path d="M12 14q-1.25 0-2.125-.875T9 11V5q0-1.25.875-2.125T12 2q1.25 0 2.125.875T15 5v6q0 1.25-.875 2.125T12 14Zm-1 7v-3.1q-2.875-.35-4.437-2.35Q5 13.55 5 11h2q0 2.075 1.463 3.538Q9.925 16 12 16q2.075 0 3.538-1.462Q17 13.075 17 11h2q0 2.55-1.563 4.55-1.562 2-4.437 2.35V21Z" />
+            </svg>
+          )}
+        </button>
+        <div style={{ flex: 1 }}>
+          <FileUpload
+            onChange={({ detail }) => setSelectedFile(detail.value[0])}
+            value={selectedFile ? [selectedFile] : []}
+            i18nStrings={{
+              uploadButtonText: "Choose file",
+              dropzoneText: "Drop file to upload",
+              removeFileAriaLabel: "Remove file"
+            }}
+            accept="image/*,.pdf,.txt,.doc,.docx"
+          />
+          <PromptInput
+            type='text'
+            value={newMessage}
+            onChange={({ detail }) => setNewMessage(detail.value)}
+            placeholder={selectedFile ? `Ask about ${selectedFile.name}...` : 'Type your question here...'}
+            actionButtonAriaLabel="Send message"
+            actionButtonIconName="send"
+          />
+        </div>
+      </div>
+    </FormField>
+  </Form>
+</form>
 
-              </FormField>
-            </Form>
-
-          </form>
           {/* Clear Data Confirmation Modal */}
 
           <Modal
