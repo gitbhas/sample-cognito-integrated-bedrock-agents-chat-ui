@@ -278,7 +278,7 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
                 throw new Error(chunkEvent.trace.trace.failureTrace.failureReason);
               }
 
-              if (chunkEvent.trace.trace.orchestrationTrace.rationale) {
+              if (chunkEvent.trace.trace.orchestrationTrace?.rationale) {
                 tasksCompleted.latestRationale = chunkEvent.trace.trace.orchestrationTrace.rationale.text;
                 scrollToBottom();
               }
