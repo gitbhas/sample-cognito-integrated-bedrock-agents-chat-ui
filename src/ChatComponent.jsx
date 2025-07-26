@@ -239,7 +239,8 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
       // Clear input field
       setNewMessage('');
       // Create message object with user information
-      const userMessage = { text: newMessage, sender: user.username };
+      const userMessage = { text: newMessage, sender: user.attributes?.preferred_username || user.username };
+
       setMessages(prevMessages => [...prevMessages, userMessage]);
       setIsAgentResponding(true); // Set to true when starting to wait for response
 
@@ -455,7 +456,8 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
               <div key={index}>
                 <ChatBubble
                   ariaLabel={`${message.sender} message`}
-                  type={message.sender === user.username ? "outgoing" : "incoming"}
+                  type={message.sender === (user.attributes?.preferred_username || user.username) ? "outgoing" : "incoming"}
+
                   avatar={
                     <Avatar
                       ariaLabel={message.sender}
