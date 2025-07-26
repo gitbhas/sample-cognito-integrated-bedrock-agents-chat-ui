@@ -8,19 +8,7 @@ import './App.css';
 
 import ChatComponent from './ChatComponent';
 import ConfigComponent from './ConfigComponent';
-import {
-  Container,
-  Form,
-  FormField,
-  PromptInput,
-  Button,
-  Modal,
-  SpaceBetween,
-  TopNavigation,
-  FileUpload
-} from "@cloudscape-design/components";
 
-const [selectedFile, setSelectedFile] = useState(null);
 
 /**
  * Main App component that manages the application state and routing
