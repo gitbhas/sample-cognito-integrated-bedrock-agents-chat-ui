@@ -34,8 +34,9 @@ import './ChatComponent.css';
  * @returns {JSX.Element} The chat interface
  */
 
-const [selectedFile, setSelectedFile] = useState(null);
+
 const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
+  const [selectedFile, setSelectedFile] = useState(null);
   // AWS Bedrock client instance for agent communication
   const [bedrockClient, setBedrockClient] = useState(null);
   // AWS Lambda client for Strands agent communication
