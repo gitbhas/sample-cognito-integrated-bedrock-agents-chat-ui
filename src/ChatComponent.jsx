@@ -266,7 +266,7 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
             sessionId: sessionId,
             endSession: false,
             enableTrace: true,
-            inputText: newMessage,
+            inputText: selectedFile ? `${newMessage} [File uploaded: ${selectedFile.name}]` : newMessage,
             promptSessionAttributes: sessionAttributes
           });
 
