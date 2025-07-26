@@ -422,9 +422,9 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
                 //This is the user session menu options
                 {
                   type: "menu-dropdown",
-                  text: user.username,
+                  text: user.attributes?.preferred_username || user.username,
                   iconName: "user-profile",
-                  title: user.username,
+                  title: user.attributes?.preferred_username || user.username,
                   ariaLabel: "User",
                   disableUtilityCollapse: true,
                   onItemClick: ({ detail }) => {
