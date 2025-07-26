@@ -15,8 +15,7 @@ import {
   Button,
   Modal,
   SpaceBetween,
-  TopNavigation,
-  FileUpload
+  TopNavigation
   
 } from "@cloudscape-design/components";
 import PropTypes from 'prop-types';
@@ -531,15 +530,11 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
           )}
         </button>
         <div style={{ flex: 1 }}>
-          <FileUpload
-            onChange={({ detail }) => setSelectedFile(detail.value[0])}
-            value={selectedFile ? [selectedFile] : []}
-            i18nStrings={{
-              uploadButtonText: "Choose file",
-              dropzoneText: "Drop file to upload",
-              removeFileAriaLabel: "Remove file"
-            }}
+          <input
+            type="file"
+            onChange={(e) => setSelectedFile(e.target.files[0])}
             accept="image/*,.pdf,.txt,.doc,.docx"
+            style={{ marginBottom: '8px', width: '100%' }}
           />
           <PromptInput
             type='text'
@@ -550,6 +545,7 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
             actionButtonIconName="send"
           />
         </div>
+
       </div>
     </FormField>
   </Form>
