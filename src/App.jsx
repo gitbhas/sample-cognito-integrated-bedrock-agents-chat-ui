@@ -14,17 +14,34 @@ import ConfigComponent from './ConfigComponent';
  * Controls the configuration and authentication flow of the application
  * @returns {JSX.Element} The rendered App component
  */
+interface UserAttributes {
+  email: string;
+  email_verified: string;
+  preferred_username: string;
+  sub: string;
+}
 function App() {
   // State to track if the application has been properly configured
   const [isConfigured, setIsConfigured] = useState(false);
   // State to track if user is currently in configuration editing mode
   const [isEditingConfig, setIsEditingConfig] = useState(false);
   //const [bedrockConfig, setBerockConfig] = useState(null);
+  
 
   /**
    * Effect hook to check for stored configuration in localStorage
    * Updates the configuration state when editing mode changes
    */
+  const [userData, setUserData] = useState<UserAttributes | null>(null);
+
+  async function session() {
+    try {
+      const data = await Auth.fetchUserAttributes();
+      setUserData(data as UserAttributes);
+    } catch (error) {
+      console.error("Error fetching user attributes:", error);
+    }
+  }
   useEffect(() => {
     const storedConfig = localStorage.getItem('appConfig');
     if (storedConfig && !isEditingConfig) {
@@ -124,7 +141,7 @@ const AuthenticatedComponent = ({ onEditConfigClick }) => {
           {isAuthenticating ? (
             <div>Authenticating...</div>
           ) : user ? (
-            <ChatComponent user={user} onLogout={() => setIsAuthenticating(false)} onConfigEditorClick={onEditConfigClick}/>
+            <ChatComponent user={userData?.preferred_username || user?.username || 'User'} onLogout={() => setIsAuthenticating(false)} onConfigEditorClick={onEditConfigClick}/>
           ) : (
             <div className="tool-bar">
               Please sign in to use the application
