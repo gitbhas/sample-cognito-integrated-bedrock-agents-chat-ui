@@ -130,7 +130,7 @@ const ChatComponent = ({ user, onLogout, onConfigEditorClick }) => {
   }, []);
 
   /**
-   * Persists messages to localStorage for a specific session
+   * Persists messages to localStorage for a specific sessions
    * Merges new messages with existing ones before storing
    * @param {string} sessionId - The identifier of the session to store messages for
    * @param {Array} newMessages - New messages to add to storage
